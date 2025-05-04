@@ -9,7 +9,7 @@ To provide daily point‑in‑time views of rapidly changing data while still in
 ---
 
 ## 2. Objectives
-
+![Logic](doc/logic.jpg)
 1. **Continuous CDC ingestion** into a bronze Hudi table (`hudi_lakehouse_ingestion`).
 2. **Daily snapshot rollover** by copying "yesterday"’s state into a new partition (`hudi_lakehouse_snapshot_rollover`).
 3. **Retention cleanup** of partitions older than 3 days (`hudi_lakehouse_cleaner`).
@@ -19,7 +19,7 @@ To provide daily point‑in‑time views of rapidly changing data while still in
 ---
 
 ## 3. Partitioning Pattern
-
+![partationg](doc/partationing.jpg)
 Data is partitioned by:
 
 ```
@@ -41,7 +41,7 @@ SELECT *
 ---
 
 ## 4. End‑to‑End Data Flow
-
+![Airflow](doc/airflow.jpg)
 ### Stage 1: Bronze Ingestion (`hudi_lakehouse_ingestion`)
 
 * **Trigger**: Frequent schedule (e.g. every 15 min).
@@ -77,19 +77,7 @@ SELECT *
 ---
 
 ## 5. Airflow DAG
-
-```mermaid
-flowchart TD
-  A[Start] --> B[Get Current Date & Last Run Date]
-  B --> C[Read CDC from S3]
-  C --> D[Glue: hudi_lakehouse_ingestion]
-  D --> E{Date Changed Since Last Run?}
-  E -- No --> F[Finish]
-  E -- Yes --> G[Glue: hudi_lakehouse_snapshot_rollover]
-  G --> H[Glue: hudi_lakehouse_cleaner]
-  H --> F[Finish]
-```
-
+![Pipeline Overview](doc/flow_diagram.jpg)
 * **Schedule**:
 
   * Bronze ingestion: every 15 min.
