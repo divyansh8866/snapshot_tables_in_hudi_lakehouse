@@ -1,0 +1,1 @@
+# snapshot_tables_in_hudi_lakehouse
